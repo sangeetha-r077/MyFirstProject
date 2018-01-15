@@ -20,7 +20,7 @@ pipeline {
         echo "My Branch Name: ${env.BRANCH_NAME}"
 
         script {
-          def myLib = new linuxacademy.git.gitStuff();
+          def myLib = new sangeetha-r077.git.gitStuff();
 
           echo "My Commit: ${myLib.gitCommit("${env.WORKSPACE}/.git")}"
         }
@@ -96,14 +96,10 @@ pipeline {
       steps {
         echo "Stashing Any Local Changes"
         sh 'git stash'
-        echo "Checking Out Development Branch"
-        sh 'git checkout development'
+        echo "Checking Out master Branch"
+        sh 'git checkout master'
         echo 'Checking Out Master Branch'
         sh 'git pull origin'
-        sh 'git checkout master'
-        echo 'Merging Development into Master Branch'
-        sh 'git merge development'
-        echo 'Pushing to Origin Master'
         sh 'git push origin master'
         echo 'Tagging the Release'
         sh "git tag rectangle-${env.MAJOR_VERSION}.${env.BUILD_NUMBER}"
@@ -114,8 +110,7 @@ pipeline {
           emailext(
             subject: "${env.JOB_NAME} [${env.BUILD_NUMBER}] Development Promoted to Master",
             body: """<p>'${env.JOB_NAME} [${env.BUILD_NUMBER}]' Development Promoted to Master":</p>
-            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-            to: "brandon@linuxacademy.com"
+            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
           )
         }
       }
@@ -126,8 +121,7 @@ pipeline {
       emailext(
         subject: "${env.JOB_NAME} [${env.BUILD_NUMBER}] Failed!",
         body: """<p>'${env.JOB_NAME} [${env.BUILD_NUMBER}]' Failed!":</p>
-        <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-        to: "brandon@linuxacademy.com"
+        <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
       )
     }
   }
